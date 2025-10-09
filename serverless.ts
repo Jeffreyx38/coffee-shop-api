@@ -4,6 +4,7 @@ import type { AWS } from "@serverless/typescript";
 
 const stage = process.env.STAGE || "${sls:stage}";
 const menuTable = `coffee-menu-${stage}`;
+const ordersTable = `coffee-orders-${stage}`;
 
 const config: AWS = {
   service: "coffee-shop-api",
@@ -17,6 +18,8 @@ const config: AWS = {
     logs: { httpApi: true },
     environment: {
       MENU_TABLE: menuTable,
+      ORDERS_TABLE: ordersTable,
+      TAX_RATE_PCT: "6.625", //philly tax; adjust as needed
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
     },
     iamRoleStatements: [
@@ -30,7 +33,10 @@ const config: AWS = {
           "dynamodb:Scan",
           "dynamodb:Query",
         ],
-        Resource: [{ "Fn::GetAtt": ["MenuTable", "Arn"] }],
+        Resource: [
+          { "Fn::GetAtt": ["MenuTable", "Arn"] },
+          { "Fn::GetAtt": ["OrdersTable", "Arn"] },
+        ],
       },
     ],
   },
@@ -65,6 +71,18 @@ const config: AWS = {
         { http: { path: "menu-items/{id}", method: "delete", cors: true } },
       ],
     },
+    orderCreate: {
+      handler: "src/handlers/orders/create.handler",
+      events: [{ http: { path: "orders", method: "post", cors: true } }],
+    },
+    orderList: {
+      handler: "src/handlers/orders/list.handler",
+      events: [{ http: { path: "orders", method: "get", cors: true } }],
+    },
+    orderGet: {
+      handler: "src/handlers/orders/get.handler",
+      events: [{ http: { path: "orders/{id}", method: "get", cors: true } }],
+    },
   },
   resources: {
     Resources: {
@@ -72,6 +90,15 @@ const config: AWS = {
         Type: "AWS::DynamoDB::Table",
         Properties: {
           TableName: menuTable,
+          BillingMode: "PAY_PER_REQUEST",
+          AttributeDefinitions: [{ AttributeName: "id", AttributeType: "S" }],
+          KeySchema: [{ AttributeName: "id", KeyType: "HASH" }],
+        },
+      },
+      OrdersTable: {
+        Type: "AWS::DynamoDB::Table",
+        Properties: {
+          TableName: ordersTable,
           BillingMode: "PAY_PER_REQUEST",
           AttributeDefinitions: [{ AttributeName: "id", AttributeType: "S" }],
           KeySchema: [{ AttributeName: "id", KeyType: "HASH" }],
