@@ -83,6 +83,14 @@ const config: AWS = {
       handler: "src/handlers/orders/get.handler",
       events: [{ http: { path: "orders/{id}", method: "get", cors: true } }],
     },
+    orderUpdate: {
+      handler: "src/handlers/orders/update.handler",
+      events: [{ http: { path: "orders/{id}", method: "put", cors: true } }],
+    },
+    orderDelete: {
+      handler: "src/handlers/orders/remove.handler",
+      events: [{ http: { path: "orders/{id}", method: "delete", cors: true } }],
+    },
   },
   resources: {
     Resources: {
