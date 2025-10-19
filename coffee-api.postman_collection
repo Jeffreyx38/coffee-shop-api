@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "e3883cec-26bd-4d11-8b21-7753434e7826",
+		"name": "Coffee Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29198793"
+	},
+	"item": [
+		{
+			"name": "Api Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/healthz",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post menu",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Latte\",\r\n  \"category\": \"espresso\",\r\n  \"sizes\": [\r\n    { \"name\": \"small\", \"priceCents\": 425 },\r\n    { \"name\": \"medium\", \"priceCents\": 475 }\r\n  ],\r\n  \"isAvailable\": false,\r\n  \"tags\": [\"milk\", \"hot\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/menu-items",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu-items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all menu items",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/menu-items",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu-items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get menu item",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/menu-items/f5125877-2c2c-465e-96be-f93de66e87c8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu-items",
+						"f5125877-2c2c-465e-96be-f93de66e87c8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update menu item",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"isAvailable\": true,\r\n  \"tags\": [\"soldout\"]\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/menu-items/f5125877-2c2c-465e-96be-f93de66e87c8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu-items",
+						"f5125877-2c2c-465e-96be-f93de66e87c8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete menu item",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/menu-items/f5125877-2c2c-465e-96be-f93de66e87c8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"menu-items",
+						"f5125877-2c2c-465e-96be-f93de66e87c8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post orders",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"customer\":{\"name\":\"jeff\"},\r\n  \"items\":[{\"menuItemId\":\"f5125877-2c2c-465e-96be-f93de66e87c8\",\"size\":\"medium\",\"qty\":1}]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/orders",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get orders",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{url}}/orders",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/orders/b056c836-d830-44c1-a8cb-dfd545e3a9b0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"orders",
+						"b056c836-d830-44c1-a8cb-dfd545e3a9b0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update order",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"status\":\"PLACED\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/orders/3ad25bc1-dc1c-49e2-aea6-e7b059a319e1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"orders",
+						"3ad25bc1-dc1c-49e2-aea6-e7b059a319e1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete order",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/orders/b056c836-d830-44c1-a8cb-dfd545e3a9b0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"orders",
+						"b056c836-d830-44c1-a8cb-dfd545e3a9b0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
