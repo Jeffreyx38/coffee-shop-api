@@ -114,6 +114,59 @@ POST - https://<api-id>.execute-api.us-east-1.amazonaws.com/dev/menu-items
 400 bad request (validation/transition), 404 not found, 500 server error.
 Consistent JSON errors: { "error": "bad_request", "message": "..." }.
 
+# BONUS: AI Search (Bedrock)
+
+A small AI-powered endpoint that answers custom questions about your Menu using Amazon Bedrock (default: Claude 3 Haiku). It reads a compact snapshot of your coffee-menu-${stage} table (capped by AI_MAX_DOCS) and returns a short answer.
+
+- Endpoint: POST /ai/search-query
+- Input: { "question": "string" }
+- Output: { "answer": "string", "meta": { "model": "...", "itemsConsidered": n, "maxDocs": n } }
+- guards: If the Menu table is empty → returns: {"answer":"No menu items found. Add items to the menu and try again.", ...}
+
+## Prereqs
+
+Enable model access in AWS Bedrock Console → Model access → allow Claude 3 Haiku. Submit model use case details.
+
+Otherwise, you'll get error:
+
+```
+ResourceNotFoundException: Model use case details have not been submitted for this account. Fill out the Anthropic use case details form before using the model. If you have already filled out the form, try again in 15 minutes.
+```
+
+Install runtime SDK (included in package.json already):
+
+```
+npm i @aws-sdk/client-bedrock-runtime
+```
+
+## Example requests:
+
+Ask a general question:
+
+```
+{
+  "question": "What is the general price range and name two items from the context?"
+}
+```
+
+Ask about availability & sizes:
+
+```
+{
+  "question": "List a few available items and mention their sizes briefly."
+}
+```
+
+Empty table behavior:
+
+```
+{
+  "answer": "No menu items found. Add items to the menu and try again.",
+  "meta": { "itemsConsidered": 0, "maxDocs": 60 }
+}
+
+```
+
 ## Test
 
 Postman collection json included.
