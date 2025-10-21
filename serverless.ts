@@ -20,6 +20,8 @@ const config: AWS = {
       MENU_TABLE: menuTable,
       ORDERS_TABLE: ordersTable,
       TAX_RATE_PCT: "6.625", //philly tax; adjust as needed
+      BEDROCK_MODEL_ID: "anthropic.claude-3-haiku-20240307-v1:0",
+      AI_MAX_DOCS: "60",
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
     },
     iamRoleStatements: [
@@ -37,6 +39,14 @@ const config: AWS = {
           { "Fn::GetAtt": ["MenuTable", "Arn"] },
           { "Fn::GetAtt": ["OrdersTable", "Arn"] },
         ],
+      },
+      {
+        Effect: "Allow",
+        Action: [
+          "bedrock:InvokeModel",
+          "bedrock:InvokeModelWithResponseStream",
+        ],
+        Resource: "*",
       },
     ],
   },
@@ -90,6 +100,12 @@ const config: AWS = {
     orderDelete: {
       handler: "src/handlers/orders/remove.handler",
       events: [{ http: { path: "orders/{id}", method: "delete", cors: true } }],
+    },
+    aiSeachQuery: {
+      handler: "src/handlers/ai/menuQuery.handler",
+      events: [
+        { http: { path: "ai/search-query", method: "post", cors: true } },
+      ],
     },
   },
   resources: {
