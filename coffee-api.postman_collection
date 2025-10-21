@@ -266,6 +266,39 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "AI Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"question\": \"What is the general price range and name two popular-sounding drinks from the context?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/ai/search-query",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ai",
+						"search-query"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
