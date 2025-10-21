@@ -171,6 +171,15 @@ Empty table behavior:
 
 Postman collection json included.
 
+Curl test sample.
+
+I'd recommend using postman collections. Just add "url" in environment variables.
+
+e.g
+
+variable: url
+value: https://xxxxxxx.execute-api.us-east-1.amazonaws.com/dev
+
 ## CI/CD (GitHub Actions + OIDC)
 
 1. AWS IAM

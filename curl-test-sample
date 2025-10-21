@@ -1,0 +1,58 @@
+BASE=https://<api-id>.execute-api.us-east-1.amazonaws.com/dev
+
+# Health
+curl -s "$BASE/healthz" | jq .
+
+# === MENU ===
+# Create
+curl -s -X POST "$BASE/menu-items" -H "Content-Type: application/json" -d '{
+  "name":"Latte",
+  "category":"espresso",
+  "sizes":[{"name":"small","priceCents":425},{"name":"medium","priceCents":475}],
+  "isAvailable":true,
+  "tags":["milk","hot"]
+}' | tee /tmp/menu.json
+
+MID=$(jq -r '.id' /tmp/menu.json)
+
+# List
+curl -s "$BASE/menu-items" | jq .
+
+# Get
+curl -s "$BASE/menu-items/$MID" | jq .
+
+# Update (partial)
+curl -s -X PUT "$BASE/menu-items/$MID" -H "Content-Type: application/json" -d '{
+  "isAvailable": false,
+  "tags": ["soldout"]
+}' | jq .
+
+# Delete
+curl -i -s -X DELETE "$BASE/menu-items/$MID"
+
+# === ORDERS ===
+# Create a fresh menu item to order (if needed)
+curl -s -X POST "$BASE/menu-items" -H "Content-Type: application/json" -d '{
+  "name":"Americano","sizes":[{"name":"small","priceCents":350}], "isAvailable":true
+}' | tee /tmp/menu2.json
+MID2=$(jq -r '.id' /tmp/menu2.json)
+
+# Create order; server calculates pricing & tax
+curl -s -X POST "$BASE/orders" -H "Content-Type: application/json" -d '{
+  "customer":{"name":"Ava"},
+  "items":[{"menuItemId":"'"$MID2"'","size":"small","qty":2}]
+}' | tee /tmp/order.json
+
+OID=$(jq -r '.id' /tmp/order.json)
+
+# Get + list
+curl -s "$BASE/orders/$OID" | jq .
+curl -s "$BASE/orders" | jq '.items | length'
+
+# Status transitions (strict)
+curl -s -X PUT "$BASE/orders/$OID" -H "Content-Type: application/json" -d '{"status":"PAID"}' | jq .
+curl -s -X PUT "$BASE/orders/$OID" -H "Content-Type: application/json" -d '{"status":"PREPARING"}' | jq .
+curl -s -X PUT "$BASE/orders/$OID" -H "Content-Type: application/json" -d '{"status":"READY"}' | jq .
+
+# Cancel (should fail for READY/PICKED_UP)
+curl -i -s -X DELETE "$BASE/orders/$OID"
